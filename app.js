@@ -1,27 +1,37 @@
-// app.js
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
+const session = require("express-session");
+const passport = require("passport");
 const connectDB = require("./config/db");
+require("./config/passport")(passport);
 
 const app = express();
-
-// Connect to MongoDB
 connectDB();
 
-// Set Pug as view engine
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
-
-// Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Routes placeholder
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/", require("./routes/auth"));
+app.use("/movies", require("./routes/movies"));
+
+app.use(require("./middleware/errorHandler"));
+
+const PORT = process.env.PORT || 3000;
 app.get("/", (req, res) => {
   res.send("🎬 Movie App Server Running");
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -47,6 +47,7 @@ app.use(function (req, res, next) {
 // Routes
 app.use("/", require("./routes/auth"));
 app.use("/movies", require("./routes/movies"));
+app.use('/movies', require('./routes/movies'));
 
 app.get("/", (req, res) => res.redirect("/login"));
 

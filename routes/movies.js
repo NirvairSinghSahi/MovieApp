@@ -3,34 +3,44 @@ const router = express.Router();
 const { ensureAuthenticated } = require('../middleware/authMiddleware');
 const Movie = require('../models/Movie');
 
-// 📄 GET /movies
+// 📖 Read all movies
 router.get('/', ensureAuthenticated, async (req, res) => {
-  const movies = await Movie.find({ user: req.user.id }).sort({ createdAt: -1 });
-  res.render('movies/list', { user: req.user, movies });
+  const movies = await Movie.find();
+  res.render('movies/list', { movies });
 });
 
-// ➕ GET /movies/add
+// ➕ Show add movie form
 router.get('/add', ensureAuthenticated, (req, res) => {
   res.render('movies/add');
 });
 
-// 💾 POST /movies/add
+// 🧾 Handle add movie form
 router.post('/add', ensureAuthenticated, async (req, res) => {
   const { title, genre, year } = req.body;
-  if (!title || !genre || !year) {
-    req.flash('error_msg', 'Please fill in all fields.');
-    return res.redirect('/movies/add');
-  }
-  const newMovie = new Movie({ title, genre, year, user: req.user.id });
-  await newMovie.save();
+  const movie = new Movie({ title, genre, year });
+  await movie.save();
   req.flash('success_msg', 'Movie added successfully!');
   res.redirect('/movies');
 });
 
-// 🗑️ GET /movies/delete/:id
-router.get('/delete/:id', ensureAuthenticated, async (req, res) => {
-  await Movie.deleteOne({ _id: req.params.id, user: req.user.id });
-  req.flash('success_msg', 'Movie deleted successfully.');
+// ✏️ Edit movie form
+router.get('/edit/:id', ensureAuthenticated, async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
+  res.render('movies/edit', { movie });
+});
+
+// 🔄 Handle edit submission
+router.post('/edit/:id', ensureAuthenticated, async (req, res) => {
+  const { title, genre, year } = req.body;
+  await Movie.findByIdAndUpdate(req.params.id, { title, genre, year });
+  req.flash('success_msg', 'Movie updated successfully!');
+  res.redirect('/movies');
+});
+
+// ❌ Delete movie
+router.post('/delete/:id', ensureAuthenticated, async (req, res) => {
+  await Movie.findByIdAndDelete(req.params.id);
+  req.flash('success_msg', 'Movie deleted successfully!');
   res.redirect('/movies');
 });
 

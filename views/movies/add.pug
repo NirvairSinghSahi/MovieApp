@@ -3,11 +3,13 @@ extends ../layouts/layout
 block content
   h1 Add New Movie
   form(action='/movies/add', method='POST')
-    label(for='title') Title
+    label(for='title') Title:
     input(type='text', name='title', required)
-    label(for='genre') Genre
+    br
+    label(for='genre') Genre:
     input(type='text', name='genre', required)
-    label(for='year') Year
+    br
+    label(for='year') Year:
     input(type='number', name='year', required)
+    br
     button(type='submit') Add Movie
-  a(href='/movies') ← Back to list

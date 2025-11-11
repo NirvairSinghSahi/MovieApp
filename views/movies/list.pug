@@ -3,12 +3,14 @@ extends ../layouts/layout
 block content
   h1 Your Movies
   a(href='/movies/add') + Add New Movie
+
   if movies.length
-    ul
-      each movie in movies
-        li
-          strong #{movie.title} 
-          |  (#{movie.genre}, #{movie.year})
-          a(href=`/movies/delete/${movie._id}`) Delete
+    each movie in movies
+      div.card
+        h3 #{movie.title} (#{movie.year})
+        p Genre: #{movie.genre}
+        a(href=`/movies/edit/${movie._id}`) Edit
+        form(action=`/movies/delete/${movie._id}`, method='POST')
+          button(type='submit') Delete
   else
     p No movies added yet.

@@ -2,26 +2,68 @@ doctype html
 html
   head
     title Movie App
-    link(rel="stylesheet", href="/css/style.css")
-  body
-    header
-      nav
-        if user
-          a(href="/movies") Movies
-          a(href="/logout") Logout
-        else
-          a(href="/login") Login
-          a(href="/register") Register
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css')
+    style.
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 20px;
+        background-color: #f7f7f7;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #222;
+        padding: 10px 20px;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 15px;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+      .flash-success {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+      }
+      .flash-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+      }
+      .container {
+        max-width: 800px;
+        margin: 30px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      }
 
-    main
+  body
+    nav
+      div
+        a(href='/') Home
+        if user
+          a(href='/movies') Movies
+          a(href='/logout') Logout
+        else
+          a(href='/login') Login
+          a(href='/register') Register
+
+    .container
       if success_msg
-        p.flash.success #{success_msg}
+        div.flash-success #{success_msg}
       if error_msg
-        p.flash.error #{error_msg}
+        div.flash-error #{error_msg}
       if error
-        p.flash.error #{error}
+        div.flash-error #{error}
 
       block content
-
-    footer
-      p © 2025 Movie App

@@ -2,6 +2,11 @@ extends ../layouts/layout
 
 block content
   h1 Your Movies
+
+  form(action='/movies', method='GET')
+    input(type='text', name='search', placeholder='Search by title or genre', value=searchQuery)
+    button(type='submit') Search
+
   a(href='/movies/add') + Add New Movie
 
   if movies.length
@@ -10,7 +15,7 @@ block content
         h3 #{movie.title} (#{movie.year})
         p Genre: #{movie.genre}
         a(href=`/movies/edit/${movie._id}`) Edit
-        form(action=`/movies/delete/${movie._id}`, method='POST')
+        form(action=`/movies/delete/${movie._id}`, method='POST', style='display:inline')
           button(type='submit') Delete
   else
-    p No movies added yet.
+    p No movies found.

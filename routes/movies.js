@@ -4,10 +4,23 @@ const { ensureAuthenticated } = require('../middleware/authMiddleware');
 const Movie = require('../models/Movie');
 
 // 📖 Read all movies
-router.get('/', ensureAuthenticated, async (req, res) => {
-  const movies = await Movie.find();
-  res.render('movies/list', { movies });
+// routes/movies.js
+
+router.get('/', ensureAuthenticated, async (req, res, next) => {
+  try {
+    const searchQuery = req.query.search || '';
+    const movies = await Movie.find({
+      $or: [
+        { title: { $regex: searchQuery, $options: 'i' } },
+        { genre: { $regex: searchQuery, $options: 'i' } }
+      ]
+    });
+    res.render('movies/list', { movies, searchQuery });
+  } catch (err) {
+    next(err);
+  }
 });
+
 
 // ➕ Show add movie form
 router.get('/add', ensureAuthenticated, (req, res) => {

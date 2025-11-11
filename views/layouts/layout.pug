@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title Movie App
+    link(rel="stylesheet", href="/css/style.css")
+  body
+    header
+      nav
+        if user
+          a(href="/movies") Movies
+          a(href="/logout") Logout
+        else
+          a(href="/login") Login
+          a(href="/register") Register
+
+    main
+      if success_msg
+        p.flash.success #{success_msg}
+      if error_msg
+        p.flash.error #{error_msg}
+      if error
+        p.flash.error #{error}
+
+      block content
+
+    footer
+      p © 2025 Movie App

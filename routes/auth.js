@@ -13,12 +13,17 @@ router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
     let user = await User.findOne({ email });
-    if (user) return res.status(400).send("User already exists");
+    if (user) {
+      req.flash("error_msg", "Email already registered");
+      return res.redirect("/register");
+    }
     user = new User({ name, email, password });
     await user.save();
-    res.send("✅ Registration successful!");
+    req.flash("success_msg", "Registration successful! Please log in.");
+    res.redirect("/login");
   } catch (err) {
-    res.status(500).send("❌ Server error");
+    req.flash("error_msg", "Server error");
+    res.redirect("/register");
   }
 });
 
@@ -26,17 +31,11 @@ router.post("/register", async (req, res) => {
 router.get("/login", (req, res) => res.render("auth/login"));
 
 // Login logic
-router.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) return res.status(500).send("Server error");
-    if (!user) return res.status(401).send(info?.message || "Login failed");
-
-    req.logIn(user, (err) => {
-      if (err) return res.status(500).send("Error logging in");
-      res.send("✅ Login successful!");
-    });
-  })(req, res, next);
-});
+router.post("/login", (passport.authenticate("local", {
+  successRedirect: "/movies",
+  failureRedirect: "/login",
+  failureFlash: true,
+})));
 
 
 

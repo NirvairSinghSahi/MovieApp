@@ -1,0 +1,16 @@
+extends ../layouts/layout
+
+block content
+  h2 Edit Movie
+  form(action=`/movies/edit/${movie._id}` method="POST")
+    label(for="title") Title
+    input(type="text" name="title" value=movie.title required)
+    label(for="description") Description
+    textarea(name="description")= movie.description
+    label(for="year") Year
+    input(type="number" name="year" value=movie.year required)
+    label(for="genre") Genre
+    input(type="text" name="genre" value=movie.genre required)
+    label(for="rating") Rating
+    input(type="number" name="rating" value=movie.rating min="0" max="10" required)
+    button(type="submit") Save Changes

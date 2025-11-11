@@ -1,0 +1,16 @@
+extends ../layouts/layout
+
+block content
+  h2 Add Movie
+  form(action="/movies/add" method="POST")
+    label(for="title") Title
+    input(type="text" name="title" required)
+    label(for="description") Description
+    textarea(name="description")
+    label(for="year") Year
+    input(type="number" name="year" required)
+    label(for="genre") Genre
+    input(type="text" name="genre" required)
+    label(for="rating") Rating
+    input(type="number" name="rating" min="0" max="10" required)
+    button(type="submit") Add Movie
